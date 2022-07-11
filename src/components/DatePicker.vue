@@ -54,10 +54,18 @@ export default {
             this.modelConfig_[idx].validHours,
             dp,
           );
-          const minuteOptions = this.$locale.getMinuteOptions(
-            this.modelConfig_[idx].minuteIncrement,
-            dp,
-          );
+          let minuteOptions;
+          if (!this.modelConfig_[idx].validMinutes) {
+            minuteOptions = this.$locale.getMinuteOptions(
+              this.modelConfig_[idx].minuteIncrement,
+              dp,
+            );
+          } else {
+            minuteOptions = this.$locale.getMinuteOptions(
+              this.modelConfig_[idx].validMinutes,
+              dp,
+            );
+          }
           return h(TimePicker, {
             props: {
               value: dp,
@@ -166,6 +174,7 @@ export default {
     selectAttribute: Object,
     attributes: Array,
     validHours: [Object, Array, Function],
+    validMinutes: [Array],
   },
   data() {
     return {
@@ -537,6 +546,7 @@ export default {
         : [config.start || config, config.end || config];
       return baseConfig.map((b, i) => ({
         validHours: this.validHours,
+        validMinutes: this.validMinutes,
         minuteIncrement: this.minuteIncrement,
         ...b,
         ...config[i],
